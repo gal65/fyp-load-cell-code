@@ -3,13 +3,8 @@ Author: Gordon Lay </br>
 Use Sparkfun HX711 load cell amplifiers to read from two load cells and output hose tracking information. </br>
 The code was developed on an Arduino Uno and uses the HX711 library https://github.com/bogde/HX711
 
-<h2> Cloning the repository </h2>
-If you are familiar with Git, simply run the following command in Bash for Windows or Terminal for Linux:
-
-```
-$ git clone https://github.com/gal65/fyp-load-cell-code.git
-```
-Otherwise, head to https://github.com/gal65/fyp-load-cell-code and download the repository as a .zip file. 
+<h2> Downloading the repository </h2>
+Head to https://github.com/gal65/fyp-load-cell-code and download the repository as a .zip file. Alternatively you can fork the repository. 
 
 <h2> How to use the program </h2>
 
