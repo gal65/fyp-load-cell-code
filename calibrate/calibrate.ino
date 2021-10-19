@@ -20,7 +20,7 @@ void setup() {
   load_cell.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
   load_cell.set_gain(128); // use channel A
   Serial.println("-----------------------------------------");
-  load_cell.set_scale(-92926.47);
+  load_cell.set_scale();
   load_cell.tare();
   Serial.println("What is the known mass? (type into serial monitor and press Enter)");
   while (Serial.available() == 0) {
@@ -34,7 +34,7 @@ void setup() {
   Serial.println(reading);
   Serial.print("Calculated scale factor:\t");
   Serial.println(reading/mass);
-  Serial.print("Done. (hard reset board to run again)");
+  Serial.print("Done. (hard reset board to run again until output is 1)");
 }
 
 void loop() {
