@@ -13,6 +13,5 @@ I recommend reading the HX711 library documentation before running calibrate.ino
 
 * Wire the circuit: the code has been written assuming pins A0 to A3 are used in the configuration 'data1, clock1, data2, clock2', but this can be changed if required.
 * Upload and run `read_double.ino`
-* The code will light up a one of the red LEDs if the hose is tending to the left or right. 
-* The green LED will light up if the robot's course is good.
-* Alternatively, open the serial monitor to view a verbose output.
+* Open the serial monitor to view a verbose output.
+* Applying different forces to each load cell will change the output (that would be sent to the control system as a signal). 
