@@ -26,6 +26,7 @@ void setup() {
   // pinMode(tracking_output_R, OUTPUT);
   // digitalWrite(tracking_output_L, LOW);
   // digitalWrite(tracking_output_R, LOW);
+  Serial.println("-----------------------------------------");
   Serial.println("Calibrating...");
   
   load_cell_L.begin(LOADCELL_L_DOUT_PIN, LOADCELL_L_SCK_PIN); // initialise left load cell
@@ -45,8 +46,13 @@ void setup() {
 
 void loop() {
   // Get readings from each load cell (in Newtons)
-  force_L = -(load_cell_L.get_units());
-  force_R = -(load_cell_R.get_units()); 
+  force_L = -load_cell_L.get_units();
+  force_R = -load_cell_R.get_units(); 
+
+//  Uncomment to view readings (in case threshold needs adjusting)
+//  Serial.print(force_L);
+//  Serial.print("\t");
+//  Serial.println(force_R);
 
   // Compare force readings
   if (abs(force_L - force_R) > THRESHOLD) {
