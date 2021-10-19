@@ -21,13 +21,13 @@ void setup() {
   Serial.println("Calibrating...");
   
   load_cell_L.begin(LOADCELL_L_DOUT_PIN, LOADCELL_L_SCK_PIN); // initialise left load cell
-  load_cell_L.set_gain(128);        // use channel A
-  load_cell_L.set_scale(2069.f);    // this value is obtained by calibrating the scale with known weights; see the README for details
-  load_cell_L.tare();               // reset the scale to 0
+  load_cell_L.set_gain(128);                                  // use channel A
+  load_cell_L.set_scale(5262.57);                             // this value is obtained by calibrating the scale with known weights; see the README for details
+  load_cell_L.tare();                                         // reset the scale to 0
   
   load_cell_R.begin(LOADCELL_R_DOUT_PIN, LOADCELL_R_SCK_PIN); // repeat for right load cell
   load_cell_R.set_gain(128);       
-  load_cell_R.set_scale(2069.f);    
+  load_cell_R.set_scale(5262.57);    
   load_cell_R.tare();               
 
   Serial.println("Calibrated.");

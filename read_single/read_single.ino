@@ -22,20 +22,20 @@ void setup() {
   Serial.println("-----------------------------------------");
   Serial.println("Before setting up the load cell:");
   Serial.print("read: \t\t");
-  Serial.println(load_cell.read());      // print a raw reading from the ADC
-
+  Serial.println(load_cell.read());             // print a raw reading from the ADC
+ 
   Serial.print("read average: \t\t");
   Serial.println(load_cell.read_average(20));   // print the average of 20 readings from the ADC
 
   Serial.print("get value: \t\t");
-  Serial.println(load_cell.get_value(5));   // print the average of 5 readings from the ADC minus the tare weight (not set yet)
+  Serial.println(load_cell.get_value(5));       // print the average of 5 readings from the ADC minus the tare weight (not set yet)
 
   Serial.print("get units: \t\t");
-  Serial.println(load_cell.get_units(5), 1);  // print the average of 5 readings from the ADC minus tare weight (not set) divided
-            // by the SCALE parameter (not set yet)
+  Serial.println(load_cell.get_units(5), 1);    // print the average of 5 readings from the ADC minus tare weight (not set) divided
+                                                // by the SCALE parameter (not set yet)
 
-  load_cell.set_scale(2069.f);      //1976.f              // this value is obtained by calibrating the scale with known weights; see the README for details
-  load_cell.tare();               // reset the scale to 0
+  load_cell.set_scale(5262.57);                 // this value is obtained by calibrating the scale with known weights; see the README for details
+  load_cell.tare();                             // reset the scale to 0
 
   Serial.println("-----------------------------------------");
 
@@ -59,7 +59,7 @@ void setup() {
 
 void loop() {
   Serial.print("reading:\t");
-  Serial.print(-(load_cell.get_units()/41*9.81*0.9), 1);
+  Serial.print(-(load_cell.get_units()), 1);
   Serial.println(" N");
   //load_cell.power_down(); // put the ADC in sleep mode       
   delay(1000);
