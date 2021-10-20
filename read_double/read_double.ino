@@ -1,59 +1,45 @@
 #include "HX711.h"
 
-// Use channel A from two different amplifiers
+#define THRESHOLD 275     // Force difference threshold, in Newtons
+#define TERMS 10          // Number of terms used in taking average measurement
+#define SLEEP_TIME 1000   // Time to power down ADC (in milliseconds)
 
-// HX711 circuit wiring
-const int LOADCELL_L_DOUT_PIN = A0;
-const int LOADCELL_L_SCK_PIN = A1;
-const int LOADCELL_R_DOUT_PIN = A2;
-const int LOADCELL_R_SCK_PIN = A3;
+class load_cell {  
+  public:
+  int DOUT_PIN;
+  int SCK_PIN;
+  int GAIN;
+  float SCALE_FACTOR;
+  // int OUTPUT_PIN;
+};
 
-// TODO: Add functionality to output to control MCU
-// const int tracking_output_L = 11; // output to control
-// const int tracking_output_R = 13; // output to control
+load_cell L, R;
+HX711 load_cell_L, load_cell_R;
+float force_L, force_R;
 
-float force_L = 0;
-float force_R = 0;
-
-#define THRESHOLD 50 // Force difference threshold, in Newtons
-
-HX711 load_cell_L;
-HX711 load_cell_R;
-
-void setup() {
-  Serial.begin(9600);
-  // pinMode(tracking_output_L, OUTPUT);
-  // pinMode(tracking_output_R, OUTPUT);
-  // digitalWrite(tracking_output_L, LOW);
-  // digitalWrite(tracking_output_R, LOW);
-  Serial.println("-----------------------------------------");
-  Serial.println("Calibrating...");
-  
-  load_cell_L.begin(LOADCELL_L_DOUT_PIN, LOADCELL_L_SCK_PIN); // initialise left load cell
-  load_cell_L.set_gain(128);                                  // use channel A
-  load_cell_L.set_scale(5262.57);                             // this value is obtained by calibrating the scale with known weights; see the README for details
-  load_cell_L.tare();                                         // reset the scale to 0
-  
-  load_cell_R.begin(LOADCELL_R_DOUT_PIN, LOADCELL_R_SCK_PIN); // repeat for right load cell
-  load_cell_R.set_gain(128);       
-  load_cell_R.set_scale(5262.57);    
-  load_cell_R.tare();               
-
-  Serial.println("Calibrated.");
-  Serial.println("-----------------------------------------");
-  Serial.println("Start:");
+void load_cell_init() {
+  L.DOUT_PIN = A0;
+  L.SCK_PIN = A1;
+  L.GAIN = 128;
+  L.SCALE_FACTOR = 5262.57;
+  R.DOUT_PIN = A2;
+  R.SCK_PIN = A3;
+  R.GAIN = 128;
+  R.SCALE_FACTOR = 5262.57;
 }
 
-void loop() {
-  // Get readings from each load cell (in Newtons)
-  force_L = -load_cell_L.get_units();
-  force_R = -load_cell_R.get_units(); 
+void amp_init() {
+  load_cell_L.begin(L.DOUT_PIN, L.SCK_PIN);
+  load_cell_L.set_gain(L.GAIN);             
+  load_cell_L.set_scale(L.SCALE_FACTOR);   
+  load_cell_L.tare();
+  load_cell_R.begin(R.DOUT_PIN, R.SCK_PIN);
+  load_cell_R.set_gain(R.GAIN);             
+  load_cell_R.set_scale(R.SCALE_FACTOR);   
+  load_cell_R.tare();
+}
 
-//  Uncomment to view readings (in case threshold needs adjusting)
-//  Serial.print(force_L);
-//  Serial.print("\t");
-//  Serial.println(force_R);
-
+void check_forces(float L, float R) {
   // Compare force readings
   if (abs(force_L - force_R) > THRESHOLD) {
     if (force_L < force_R) {
@@ -73,11 +59,34 @@ void loop() {
     // digitalWrite(tracking_output_R, LOW);
     Serial.println("Correct course"); 
   }
+}
 
-  // Put the ADCs in sleep mode to save power
+void toggle_power(int period) {
   load_cell_L.power_down(); 
   load_cell_R.power_down();  
-  delay(1000);
+  delay(period);
   load_cell_L.power_up();
   load_cell_R.power_up();
+}
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("-----------------------------------------");
+  Serial.println("Starting up...");
+  load_cell_init();
+  amp_init();
+  Serial.println("Ready.");
+  Serial.println("-----------------------------------------");
+  Serial.println("Start:");
+}
+
+void loop() {
+  force_L = -load_cell_L.get_units();
+  force_R = -load_cell_R.get_units();
+  //  Uncomment to view readings (in case threshold needs adjusting)
+  Serial.print(force_L);
+  Serial.print("\t");
+  Serial.println(force_R);
+  check_forces(force_L, force_R);
+  toggle_power(SLEEP_TIME);
 }
