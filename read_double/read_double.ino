@@ -1,6 +1,8 @@
+// TODO: Add functionality to send output signals to control MCU (commented out)
+
 #include "HX711.h"
 
-#define THRESHOLD 275     // Force difference threshold, in Newtons
+#define THRESHOLD 75      // Force difference threshold, in Newtons
 #define TERMS 10          // Number of terms used in taking average measurement
 #define SLEEP_TIME 1000   // Time to power down ADC (in milliseconds)
 
@@ -26,6 +28,13 @@ void load_cell_init() {
   R.SCK_PIN = A3;
   R.GAIN = 128;
   R.SCALE_FACTOR = 5262.57;
+  
+  // L.OUTPUT_PIN = 11;
+  // R.OUTPUT_PIN = 13;
+  // pinMode(L.OUTPUT_PIN, OUTPUT);
+  // pinMode(R.OUTPUT_PIN, OUTPUT);
+  // digitalWrite(L.OUTPUT_PIN, LOW);
+  // digitalWrite(R.OUTPUT_PIN, LOW);
 }
 
 void amp_init() {
